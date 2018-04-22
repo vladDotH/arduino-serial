@@ -1,0 +1,21 @@
+# depslib dependency file v1.0
+1521311511 source:c:\users\ÎËÅÃ\desktop\winserial\ardpart.cpp
+
+1521366752 source:c:\users\ÎËÅÃ\desktop\winserial\main.cpp
+	"wincom.h"
+
+1521312306 c:\users\ÎËÅÃ\desktop\winserial\wincom.h
+	<string>
+	<iostream>
+	<windows.h>
+	<sstream>
+	"motor.h"
+
+1521311014 c:\users\ÎËÅÃ\desktop\winserial\motor.h
+
+1521311507 source:c:\users\ÎËÅÃ\desktop\winserial\motor.cpp
+	"motor.h"
+
+1523892593 source:c:\users\ÎËÅÃ\desktop\winserial\wincom.cpp
+	"wincom.h"
+
