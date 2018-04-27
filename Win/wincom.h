@@ -24,7 +24,6 @@ public:
     void defPort( int port );
 
     void send( string str );
-    string read();
 };
 
 class winController {
