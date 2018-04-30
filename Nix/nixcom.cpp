@@ -2,25 +2,25 @@
 #include <string.h>
 #include <stdio.h>
 
-nixCom::nixCom( int port )
+nixCom::nixCom( string port )
 {
     this -> defPort( port );
 }
 
-void nixCom::defPort( int port )
+nixCom::~nixCom()
 {
-    stringstream sstr;
-    sstr << port;
-    sstr >> this -> port;
+    close( portHandle );
+}
 
-    string sPortName = "/dev/ttyACM";     
-    sPortName += this -> port;
+void nixCom::defPort( string port )
+{
+    this -> port = port;
 
-    portHandle = open( sPortName.c_str(), O_RDWR| O_NONBLOCK | O_NDELAY );
+    portHandle = open( port.c_str(), O_RDWR| O_NONBLOCK | O_NDELAY );
 
     if ( portHandle < 0 )
     {
-        cout << "Error " << errno << " opening " << sPortName.c_str() << ": " << endl;
+        cout << "Error " << errno << " opening " << port.c_str() << ": " << endl;
     }
 
     struct termios tty;
@@ -77,12 +77,17 @@ void nixCom::send ( string message )
 
 /**                                              **/
 
-nixController::nixController( int port )
+nixController::nixController( string port )
 {
     controlPort.defPort( port );
 }
 
-void nixController::setLR ( motor *Lmotor, motor *Rmotor )
+nixController::~nixController()
+{
+    ride( 0, 0 );
+}
+
+void nixController::setLR( motor *Lmotor, motor *Rmotor )
 {
     this -> Lmotor = Lmotor;
     this -> Rmotor = Rmotor;
@@ -96,6 +101,10 @@ void nixController::ride( int Lval, int Rval )
 
 void nixController::motorStart ( motor &currentMotor, int val )
 {
+   if ( val > 127 ) val = 127;
+
+   if ( val < -127 ) val = -127;
+
    if ( currentMotor.currentSpeed == val )
         return;
 
@@ -103,15 +112,10 @@ void nixController::motorStart ( motor &currentMotor, int val )
 
     string message;
 
-    val = abs( val );
-    val = ( val > 254 ) ? 254 : val;
+    cout << (int)(signed char)val << " to " << currentMotor.mainPin << endl;
 
-    message += (char) currentMotor.mainPin;
+    message += (char) ( currentMotor.mainPin << 4 ) | currentMotor.reversePin ;
     message += (char) val;
-    message += (char) currentMotor.reversePin;
-    message += (char) ( currentMotor.currentSpeed < 0 ? 1 : 0 );
 
     controlPort.send( message );
-
-    //Sleep( 20 );
 }

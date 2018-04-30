@@ -8,9 +8,10 @@
 #include <unistd.h>       ///
 
 #include <string>
-#include <stdio.h>
 #include <iostream>
 #include <sstream>
+#include <cstring>
+#include <math.h>
 
 #include "motor.h"
 
@@ -23,11 +24,11 @@ private:
 
 public:
     nixCom () = default;
-    ~nixCom () { close( portHandle ); }
+    ~nixCom ();
 
-    nixCom ( int port );
+    nixCom ( string port );
 
-    void defPort ( int port );
+    void defPort ( string port );
 
     void send( string message );
 };
@@ -36,12 +37,12 @@ class nixController {
 private:
     motor *Lmotor,
           *Rmotor;
-
+          
     nixCom controlPort;
 
 public:
-    nixController ( int port );
-    ~nixController () = default;
+    nixController ( string port );
+    ~nixController ();
 
     void setLR ( motor *Lmotor, motor *Rmotor );
     void ride ( int Lval, int Rval );

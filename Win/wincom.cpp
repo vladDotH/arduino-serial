@@ -11,7 +11,7 @@ void winCom::defPort( int port )
     sstr << port;
     sstr >> this -> port;
 
-    string sPortName = "COM";
+    string sPortName = "\\\\.\\COM";
     sPortName += this -> port;
 
     hSerial = CreateFile( sPortName.c_str(), GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0 );
@@ -74,15 +74,15 @@ void winController::motorStart ( motor &currentMotor, int val )
 
     currentMotor.currentSpeed = val;
 
+    if ( val > 127 )
+        val = 127;
+    if ( val < -127 )
+        val = -127;
+
     string message;
 
-    val = abs( val );
-    val = ( val > 254 ) ? 254 : val;
-
-    message += (char) currentMotor.mainPin;
+    message += (char) ( currentMotor.mainPin << 4 ) | currentMotor.reversePin;
     message += (char) val;
-    message += (char) currentMotor.reversePin;
-    message += (char) currentMotor.currentSpeed < 0;
 
     controlPort.send( message );
 }
