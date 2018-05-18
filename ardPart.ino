@@ -28,7 +28,7 @@ void loop()
 
     message[1] = 2 * abs( message[1] );
 
-    analogWrite( message[0] >> 4, message[1]  );
+    analogWrite( ( message[0] >> 4 ) & 15, message[1]  );
   }
 }
 
