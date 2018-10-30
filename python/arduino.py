@@ -11,7 +11,6 @@ class mode:
 
 
 class Arduino:
-    port: Serial
 
     def digitalWrite(self, pin, val):
         self.port.write( bytes( [mode.DIGITAL, pin, val] ) )
