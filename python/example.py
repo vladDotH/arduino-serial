@@ -22,3 +22,8 @@ while _in != 'q':
     if _in == 's':
         bot.analogWrite(6, 0)
         bot.digitalWrite(7, 0)
+
+    if _in == 'u':
+        print(bot.sonicRead(10, 8))
+        print(bot.sonicRead(10, 8))
+        print(bot.sonicRead(10, 8))
