@@ -1,6 +1,10 @@
+#include <NewPing.h>
+
 enum Mode {
   DIGITAL = 2,
-  ANALOG
+  ANALOG,
+
+  UltraSonicGet = 255
 };
 
 void setup() {
@@ -14,6 +18,11 @@ void setup() {
 
 byte msg [3];
 int byteCount = 0;
+
+//#define TRIGGER_PIN 10
+//#define ECHO_PIN 8
+//#define MAX_DISTANCE 50
+//NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
 void loop() {
   if ( Serial.available() ) {
@@ -29,6 +38,12 @@ void loop() {
 
     if( msg[0] == ANALOG ){
       analogWrite( msg[1], msg[2] );
+    }
+
+    if( msg[0] == UltraSonicGet ){
+      NewPing sonar(msg[1], msg[2], 200);
+      int range = sonar.ping_cm();
+      Serial.write( (byte)range );
     }
     
     byteCount = 0;
